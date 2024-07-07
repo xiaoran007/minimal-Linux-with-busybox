@@ -147,7 +147,7 @@ set timeout=10
 menuentry 'xros' --class os {
     insmod gzio
     insmod part_msdos
-    linux /boot/bzImage
+    linux /boot/bzImage vga=0x33E
     initrd /boot/rootfs.img
 }
 ```
@@ -199,7 +199,7 @@ fi
 menuentry 'xros' --class os {
     insmod gzio
     insmod part_msdos
-    linux /boot/bzImage
+    linux /boot/bzImage vga=0x33E
     initrd /boot/rootfs.img
 }
 ```
