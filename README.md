@@ -78,9 +78,13 @@ mkdir -p bin sbin etc usr/bin usr/sbin dev sys proc
 ```
 Copy all contains in **_install** to **rootfs**.
 ```shell
-cp -a ./busybox-1.36.1/_install/* ./rootfs
+cp -a ../busybox-1.36.1/_install/* ./
 ```
 Now create a executable file called **init** inside **rootfs** folder. In this guide, **init** is a shell script, but you can also use any executable as the **init** file.
+```shell
+vim init
+```
+
 ```shell
 #!/bin/sh
 
@@ -101,4 +105,22 @@ Create rootfs image:
 ```shell
 find . -print0 | cpio --null -ov --format=newc | gzip -9 > ../rootfs.cpio.gz
 ```
+
+## Testing with qemu
+Here is an example folder hierarchy.
+```shell
+.
+├── busybox-1.36.1
+├── busybox-1.36.1.tar.bz2
+├── bzImage
+├── linux-5.15
+├── linux-5.15.tar.xz
+├── rootfs
+└── rootfs.cpio.gz
+```
+Start qemu use this command:
+```shell
+qemu-system-x86_64 -kernel bzImage -initrd rootfs.cpio.gz
+```
+
 
