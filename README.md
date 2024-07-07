@@ -94,6 +94,8 @@ mount -t devtmpfs devtmpfs /dev
 mount -t proc none /proc
 mount -t sysfs none /sys
 
+dmesg -n 1
+
 echo "Minimal linux with busybox"
 exec /bin/sh
 
@@ -162,5 +164,50 @@ And you can see grub boot page, and select xros to boot our linux system.
 ## Boot on real machine!
 Now you can boot your own linux system on your real machine. Since this ISO image is set for bios booting, so make sure your real machine works on bios or csm enable mode.
 
+## UEFI support
+Previouslu built system only supports booting on bios, but today's mainstream devices use uefi to boot. So if you want this sysstem to support uefi, follow the guide below to change some configuration files and re-build system.
 
+First, enable kernel uefi graphics support:
+
+```shell
+make menuconfig
+```
+In menuconfig TUI, enable the following features.
+```shell
+Device Drivers  --->
+  Graphics support  --->
+    Frame buffer Devices  --->
+      <*> Support for frame buffer devices
+      <*> EFI-based Framebuffer Support
+```
+Then re-build kernel.
+
+Second, replace the original **grub.conf** file withh the following:
+```shell
+set default=0
+set timeout=10
+
+insmod efi_gop
+insmod font
+if loadfont /boot/grub/fonts/unicode.pf2
+then
+        insmod gfxterm
+        set gfxmode=640x480
+        set gfxpayload=keep
+        terminal_output gfxterm
+fi
+menuentry 'xros' --class os {
+    insmod gzio
+    insmod part_msdos
+    linux /boot/bzImage
+    initrd /boot/rootfs.img
+}
+```
+Then re-build bootable ISO.
+
+To test the uefi enable ISO, you can use qemu:
+```shell
+sudo qemu-system-x86_64 -cdrom xros.iso -drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd -drive if=pflash,format=raw,file=/usr/share/OVMF/OVMF_VARS.fd -m 2048 -cpu host -enable-kvm
+```
+You can find **efi** folder inside path **/sys/firmware/**.
 
