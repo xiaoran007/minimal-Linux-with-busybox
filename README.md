@@ -31,6 +31,10 @@ Finally we can start to compile the kernel. You can set max parallel process num
 ```shell
 make -j8 # or use make -j$(nproc) to enable all cores.
 ```
+Old kernel version needs old gcc, so if you found some compile time issues, use this command to set gcc version.
+```shell
+make HOSTCC=gcc-11 CC=gcc-11 -j8
+```
 After build process, you can find kernel image in the following path:
 ```shell
 arch/x86_64/boot/bzImage # replace x86_64 to your system architecture.
