@@ -126,7 +126,7 @@ Start qemu use this command:
 ```shell
 qemu-system-x86_64 -kernel bzImage -initrd rootfs.img
 ```
-
+![qemu](./imgs/qemu01.png)
 ## Build bootable ISO image
 First setup iso folder:
 ```shell
@@ -161,8 +161,10 @@ qemu-system-x86_64 -cdrom xros.iso
 ```
 And you can see grub boot page, and select xros to boot our linux system.
 
+![grub](./imgs/grub.png)
 ## Boot on real machine!
-Now you can boot your own linux system on your real machine. Since this ISO image is set for bios booting, so make sure your real machine works on bios or csm enable mode.
+Now you can boot your own linux system on your real machine. Since this ISO image is set for bios booting, so make sure your real machine works on bios or csm enable mode. If you want boot with uefi, see next section.
+![real machine](./imgs/qemu01.png)
 
 ## UEFI support
 Previouslu built system only supports booting on bios, but today's mainstream devices use uefi to boot. So if you want this sysstem to support uefi, follow the guide below to change some configuration files and re-build system.
@@ -210,4 +212,4 @@ To test the uefi enable ISO, you can use qemu:
 sudo qemu-system-x86_64 -cdrom xros.iso -drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd -drive if=pflash,format=raw,file=/usr/share/OVMF/OVMF_VARS.fd -m 2048 -cpu host -enable-kvm
 ```
 You can find **efi** folder inside path **/sys/firmware/**.
-
+![uefi](./imgs/uefi.png)
