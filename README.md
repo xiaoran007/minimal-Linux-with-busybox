@@ -31,4 +31,60 @@ arch/x86_64/boot/bzImage # replace x86_64 to your system architecture.
 ```
 
 ## Build busybox from source
-indev
+You can download busybox source code from [busybox.net](https://www.busybox.net/), or download from **release**.
+```shell
+wget https://www.busybox.net/downloads/busybox-1.36.1.tar.bz2
+```
+Then unzip bz archive:
+```shell
+tar -xvf busybox-1.36.1.tar.bz2
+cd busybox-1.36.1
+```
+Since we need a static-linked binary, we should enable static build by menuconfig TUI and set __Build static binary (no shared libs)__. 
+```shell
+make defconfig # create default config file first.
+make menuconfig
+```
+Now you can start to compile the busybox.
+```shell
+make -j8 # or use make -j$(nproc) to enable all cores.
+```
+After build process, you can create a linux-like folder by simple run:
+```shell
+make install
+```
+You can find a new folder **_install** is created.
+
+## Create rootfs
+Now we can create rootfs based on busybox.
+```shell
+mkdir -p rootfs # outside busybox dir.
+cd rootfs
+mkdir -p bin sbin etc usr/bin usr/sbin dev sys proc
+```
+Copy all contains in **_install** to **rootfs**.
+```shell
+cp -a ./busybox-1.36.1/_install/* ./rootfs
+```
+Now create a executable file called **init** inside **rootfs** folder. In this guide, **init** is a shell script, but you can also use any executable as the **init** file.
+```shell
+#!/bin/sh
+
+mount -t devtmpfs devtmpfs /dev
+mount -t proc none /proc
+mount -t sysfs none /sys
+
+echo "Minimal linux with busybox"
+exec /bin/sh
+
+poweroff -f
+```
+And then:
+```shell
+chmod +x init
+```
+Create rootfs image:
+```shell
+find . -print0 | cpio --null -ov --format=newc | gzip -9 > ../rootfs.cpio.gz
+```
+
