@@ -29,6 +29,10 @@ After build process, you can find kernel image in the following path:
 ```shell
 arch/x86_64/boot/bzImage # replace x86_64 to your system architecture.
 ```
+You can copy this image file to project root directory.
+```shell
+cp arch/x86_64/boot/bzImage ../
+```
 
 ## Build busybox from source
 You can download busybox source code from [busybox.net](https://www.busybox.net/), or download from **release**.
