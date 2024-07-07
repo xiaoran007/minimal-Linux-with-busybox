@@ -164,7 +164,6 @@ And you can see grub boot page, and select xros to boot our linux system.
 ![grub](./imgs/grub.png)
 ## Boot on real machine!
 Now you can boot your own linux system on your real machine. Since this ISO image is set for bios booting, so make sure your real machine works on bios or csm enable mode. If you want boot with uefi, see next section.
-![real machine](./imgs/qemu01.png)
 
 ## UEFI support
 Previouslu built system only supports booting on bios, but today's mainstream devices use uefi to boot. So if you want this sysstem to support uefi, follow the guide below to change some configuration files and re-build system.
@@ -213,3 +212,6 @@ sudo qemu-system-x86_64 -cdrom xros.iso -drive if=pflash,format=raw,readonly,fil
 ```
 You can find **efi** folder inside path **/sys/firmware/**.
 ![uefi](./imgs/uefi.png)
+
+UEFI version on real machine:
+![real machine](./imgs/real.jpg)
