@@ -3,6 +3,12 @@ minimal (bootable) Linux with busybox, for both qemu and real machine.
 
 To build a bootable linux system from, the linux kernel and a root file system is needed in minimal. So in this guide, we first build a linux kernel, and then build a static linked busybox and finally create a bootable linux system.
 
+## Before build
+You may need to install the required packages first:
+```shell
+sudo apt install build-essential libncurses-dev bison flex libssl-dev libelf-dev
+```
+
 ## Build Linux kernel from source
 First, download linux kernel source code from [kernel.org](https://kernel.org/) or use github mirror. In this guide, we select version 5.15 as an example.
 ```shell
