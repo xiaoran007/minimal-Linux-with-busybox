@@ -103,7 +103,7 @@ chmod +x init
 ```
 Create rootfs image:
 ```shell
-find . -print0 | cpio --null -ov --format=newc | gzip -9 > ../rootfs.cpio.gz
+find . -print0 | cpio --null -ov --format=newc | gzip -9 > ../rootfs.img
 ```
 
 ## Testing with qemu
@@ -116,11 +116,11 @@ Here is an example folder hierarchy.
 ├── linux-5.15
 ├── linux-5.15.tar.xz
 ├── rootfs
-└── rootfs.cpio.gz
+└── rootfs.img
 ```
 Start qemu use this command:
 ```shell
-qemu-system-x86_64 -kernel bzImage -initrd rootfs.cpio.gz
+qemu-system-x86_64 -kernel bzImage -initrd rootfs.img
 ```
 
 
