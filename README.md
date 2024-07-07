@@ -1,12 +1,14 @@
 # minimal-Linux-with-busybox
 minimal (bootable) Linux with busybox, for both qemu and real machine.
 
-To build a bootable linux system from, the linux kernel and a root file system is needed in minimal. So in this guide, we first build a linux kernel, and then build a static linked busybox and finally create a bootable linux system.
+To build a bootable linux system, the linux kernel and a root file system is needed in minimal. So in this guide, we first build a linux kernel, and then build a static linked busybox and finally create a bootable linux system.
+
+If you want to build a real machine bootbale iso, a bootloader is needed. In this guide, we will use grub as our bootloader.
 
 ## Before build
 You may need to install the required packages first:
 ```shell
-sudo apt install build-essential libncurses-dev bison flex libssl-dev libelf-dev
+sudo apt install build-essential libncurses-dev bison flex libssl-dev libelf-dev mtools grub-common grub-pc-bin xorriso
 ```
 
 ## Build Linux kernel from source
@@ -122,5 +124,43 @@ Start qemu use this command:
 ```shell
 qemu-system-x86_64 -kernel bzImage -initrd rootfs.img
 ```
+
+## Build bootable ISO image
+First setup iso folder:
+```shell
+mkdir -p xriso # you can use any name you like.
+mkdir -p xriso/boot
+mkdir -p xriso/boot/grub
+cp bzImage rootfs.img xriso/boot/
+```
+Then create **grub.cfg** file inside grub folder:
+```shell
+cd xriso/boot/grub
+vim grub.cfg
+```
+
+```shell
+set default=0
+set timeout=10
+menuentry 'xros' --class os {
+    insmod gzio
+    insmod part_msdos
+    linux /boot/bzImage
+    initrd /boot/rootfs.img
+}
+```
+Now you can create ISO (in project root directory):
+```shell
+grub-mkrescue -o xros.iso xriso/
+```
+The **xros.iso** is bootable ISO, so we can directly boot our linux system from it on both qemu and real machine. You can test it on qemu first:
+```shell
+qemu-system-x86_64 -cdrom xros.iso
+```
+And you can see grub boot page, and select xros to boot our linux system.
+
+## Boot on real machine!
+Now you can boot your own linux system on your real machine. Since this ISO image is set for bios booting, so make sure your real machine works on bios or csm enable mode.
+
 
 
